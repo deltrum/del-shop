@@ -34,20 +34,20 @@ export default {
 
     const actionBtnText = computed(() => isInCart.value ? 'В корзине' : 'Купить')
 
-    watch(convertedPrice, (newVal, oldVal) => {
-      if (newVal > oldVal) {
-        playAnimation('rise')
-      } else {
-        playAnimation('fall')
-      }
-    })
-
     const subItemsStr = computed(() => {
       const itemB = props.item.B
 
       return Object.keys(itemB ?? {}).map((key) => {
         return itemB[key].N
       }).join(', ')
+    })
+
+    watch(convertedPrice, (newVal, oldVal) => {
+      if (newVal > oldVal) {
+        playAnimation('rise')
+      } else {
+        playAnimation('fall')
+      }
     })
 
     function addToCart () {
@@ -108,6 +108,8 @@ export default {
 
       <button
         class="an-item__header-btn a-btn"
+        :class="{'a-btn--disabled': isInCart}"
+        :disabled="isInCart"
         @click="addToCart"
       >
         {{ actionBtnText }}

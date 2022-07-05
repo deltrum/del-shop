@@ -58,6 +58,11 @@ import ACart from '~/components/cart/ACart.vue'
     }
   }
 
+  .a-btn--disabled {
+    background-color: gray;
+    pointer-events: none;
+  }
+
   .container {
     max-width: 1270px;
     width: 90%;
