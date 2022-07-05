@@ -20,12 +20,12 @@ export default {
       console.log(newAmount)
       if (newAmount > 0 && newAmount <= props.item.P) {
         localAmount.value = newAmount
-        cartStore.changeAmount(props.item.T, newAmount)
+        cartStore.changeAmount(props.item.index, newAmount)
       }
     }
 
     function removeFromCart () {
-      cartStore.removeFromCart(props.item.T)
+      cartStore.removeFromCart(props.item.index)
     }
 
     return {

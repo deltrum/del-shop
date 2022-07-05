@@ -1,5 +1,5 @@
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useCartStore } from '~/stores/cart'
 import ACartItem from '~/components/cart/ACartItem.vue'
 
@@ -10,6 +10,8 @@ export default {
 
   setup () {
     const cartStore = useCartStore()
+
+    const filteredCartItems = computed(() => cartStore.items.filter(item => item !== false))
 
     const isShow = ref(false)
 
@@ -23,6 +25,7 @@ export default {
 
     return {
       cartStore,
+      filteredCartItems,
       isShow,
       showModal,
       closeModal
@@ -72,13 +75,13 @@ export default {
           Закрыть
         </button>
         <div class="a-cart__cart">
-          <h3 v-if="!cartStore.items.length">
+          <h3 v-if="!filteredCartItems.length">
             У вас нет товаров в корзине :(
           </h3>
           <template v-else>
             <div class="a-cart__list">
               <ACartItem
-                v-for="item in cartStore.items"
+                v-for="item in filteredCartItems"
                 :key="item.T"
                 :item="item"
               />

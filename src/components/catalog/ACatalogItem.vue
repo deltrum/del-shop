@@ -23,16 +23,15 @@ export default {
 
     const inCartIndex = ref(null)
 
-    const inCartItemRef = computed(() => cartStore.items[inCartIndex.value])
-
-    const isInCart = computed(() => {
-      if (inCartItemRef.value) {
-        return inCartItemRef.value.T === props.item.T
+    const inCartItemRef = computed(() => {
+      if (inCartIndex.value !== null && cartStore.items[inCartIndex.value]) {
+        return cartStore.items[inCartIndex.value].T === props.item.T
       }
+
       return false
     })
 
-    const actionBtnText = computed(() => isInCart.value ? 'В корзине' : 'Купить')
+    const actionBtnText = computed(() => inCartItemRef.value ? 'В корзине' : 'Купить')
 
     const subItemsStr = computed(() => {
       const itemB = props.item.B
@@ -60,7 +59,7 @@ export default {
         amount: 1
       }
 
-      inCartIndex.value = cartStore.addToCart(itemToAdd)
+      inCartIndex.value = cartStore.addToCart(itemToAdd) - 1
     }
 
     function playAnimation (animName) {
@@ -76,12 +75,12 @@ export default {
     return {
       itemRef,
       itemHeaderRef,
-      isInCart,
+      inCartItemRef,
       convertedPrice,
       formattedPrice,
       subItemsStr,
       actionBtnText,
-      inCartItemRef,
+      inCartIndex,
       addToCart
     }
   }
@@ -108,8 +107,8 @@ export default {
 
       <button
         class="an-item__header-btn a-btn"
-        :class="{'a-btn--disabled': isInCart}"
-        :disabled="isInCart"
+        :class="{'a-btn--disabled': inCartItemRef}"
+        :disabled="inCartItemRef"
         @click="addToCart"
       >
         {{ actionBtnText }}

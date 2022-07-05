@@ -59,7 +59,6 @@ import ACart from '~/components/cart/ACart.vue'
   }
 
   .a-btn--disabled {
-    background-color: gray;
     pointer-events: none;
   }
 
