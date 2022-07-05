@@ -17,13 +17,22 @@ export default {
 
     const cartStore = useCartStore()
 
-    const isInCart = ref(false)
-
-    const actionBtnText = computed(() => isInCart.value ? 'В корзине' : 'Купить')
-
     const convertedPrice = computed(() => Math.floor(props.item.C * cartStore.convertRate))
 
     const formattedPrice = computed(() => `${convertedPrice.value.toLocaleString()} ₽`)
+
+    const inCartIndex = ref(null)
+
+    const inCartItemRef = computed(() => cartStore.items[inCartIndex.value])
+
+    const isInCart = computed(() => {
+      if (inCartItemRef.value) {
+        return inCartItemRef.value.T === props.item.T
+      }
+      return false
+    })
+
+    const actionBtnText = computed(() => isInCart.value ? 'В корзине' : 'Купить')
 
     watch(convertedPrice, (newVal, oldVal) => {
       if (newVal > oldVal) {
@@ -42,18 +51,16 @@ export default {
     })
 
     function addToCart () {
-      if (!isInCart.value) {
-        const itemToAdd = {
-          T: props.item.T,
-          P: props.item.P,
-          subItemsStr,
-          convertedPrice,
-          formattedPrice,
-          amount: 1
-        }
-
-        isInCart.value = cartStore.addToCart(itemToAdd)
+      const itemToAdd = {
+        T: props.item.T,
+        P: props.item.P,
+        subItemsStr,
+        convertedPrice,
+        formattedPrice,
+        amount: 1
       }
+
+      inCartIndex.value = cartStore.addToCart(itemToAdd)
     }
 
     function playAnimation (animName) {
@@ -70,10 +77,11 @@ export default {
       itemRef,
       itemHeaderRef,
       isInCart,
-      actionBtnText,
       convertedPrice,
       formattedPrice,
       subItemsStr,
+      actionBtnText,
+      inCartItemRef,
       addToCart
     }
   }

@@ -28,7 +28,7 @@ export const useCartStore = defineStore('cart', () => {
   function addToCart (item) {
     items.push(item)
 
-    return true
+    return items.length - 1
   }
 
   function removeFromCart (itemId) {
