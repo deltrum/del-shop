@@ -11,27 +11,17 @@ export default {
   },
 
   setup (props) {
+    const cartStore = useCartStore()
+
     const itemRef = ref(null)
 
     const itemHeaderRef = ref(null)
-
-    const cartStore = useCartStore()
 
     const convertedPrice = computed(() => Math.floor(props.item.C * cartStore.convertRate))
 
     const formattedPrice = computed(() => `${convertedPrice.value.toLocaleString()} ₽`)
 
-    const inCartIndex = ref(null)
-
-    const inCartItemRef = computed(() => {
-      if (inCartIndex.value !== null && cartStore.items[inCartIndex.value]) {
-        return cartStore.items[inCartIndex.value].T === props.item.T
-      }
-
-      return false
-    })
-
-    const actionBtnText = computed(() => inCartItemRef.value ? 'В корзине' : 'Купить')
+    const actionBtnText = computed(() => props.item.isInCart ? 'В корзине' : 'Купить')
 
     const subItemsStr = computed(() => {
       const itemB = props.item.B
@@ -59,7 +49,7 @@ export default {
         amount: 1
       }
 
-      inCartIndex.value = cartStore.addToCart(itemToAdd) - 1
+      cartStore.addToCart(itemToAdd)
     }
 
     function playAnimation (animName) {
@@ -75,12 +65,9 @@ export default {
     return {
       itemRef,
       itemHeaderRef,
-      inCartItemRef,
-      convertedPrice,
       formattedPrice,
       subItemsStr,
       actionBtnText,
-      inCartIndex,
       addToCart
     }
   }
@@ -107,8 +94,8 @@ export default {
 
       <button
         class="an-item__header-btn a-btn"
-        :class="{'a-btn--disabled': inCartItemRef}"
-        :disabled="inCartItemRef"
+        :class="{'a-btn--disabled': item.isInCart}"
+        :disabled="item.isInCart"
         @click="addToCart"
       >
         {{ actionBtnText }}

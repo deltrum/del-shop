@@ -1,15 +1,16 @@
 import { defineStore } from 'pinia'
 import { reactive, ref, computed } from 'vue'
+import { useGoodsStore } from '~/stores/goods.js'
 
 export const useCartStore = defineStore('cart', () => {
+  setInterval(changeConvertRate, 15000)
+
+  const goodsStore = useGoodsStore()
+
   const convertRate = ref(53)
-
-  const convertRateUpdterHandle = setInterval(changeConvertRate, 15000)
-
   const items = reactive([])
 
   const isCartEmpty = computed(() => !items.length)
-
   const itemsInCart = computed(() => ` - ${items.filter(item => item !== false).length}`)
 
   const roundupPrice = computed(() => {
@@ -32,18 +33,30 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function addToCart (item) {
-    return items.push({ index: items.length, ...item })
+    items.push(item)
+
+    goodsStore.changeIsInCart(item.T, true)
   }
 
-  function removeFromCart (index) {
+  function removeFromCart (itemId) {
     if (!isCartEmpty.value) {
-      items[index] = false
+      const foundIndex = items.findIndex(item => item.T === itemId)
+
+      if (foundIndex !== -1) {
+        items.splice(foundIndex, 1)
+
+        goodsStore.changeIsInCart(itemId, false)
+      }
     }
   }
 
-  function changeAmount (index, newAmount) {
+  function changeAmount (itemId, newAmount) {
     if (!isCartEmpty.value) {
-      items[index].amount = newAmount
+      const foundIndex = items.findIndex(item => item.T === itemId)
+
+      if (foundIndex !== -1) {
+        items[foundIndex].amount = newAmount
+      }
     }
   }
 
