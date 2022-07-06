@@ -11,11 +11,11 @@ export const useCartStore = defineStore('cart', () => {
   const items = reactive([])
 
   const isCartEmpty = computed(() => !items.length)
-  const itemsInCart = computed(() => ` - ${items.filter(item => item !== false).length}`)
 
   const roundupPrice = computed(() => {
     if (!isCartEmpty.value) {
       let finalPrice = 0
+
       items.forEach(item => {
         if (item?.convertedPrice) {
           finalPrice += item.convertedPrice * item.amount
@@ -64,7 +64,6 @@ export const useCartStore = defineStore('cart', () => {
     convertRate,
     items,
     isCartEmpty,
-    itemsInCart,
     roundupPrice,
     addToCart,
     removeFromCart,
