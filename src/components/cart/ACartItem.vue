@@ -53,6 +53,8 @@ export default {
         <input
           :value="localAmount"
           type="number"
+          min="0"
+          :max="item.P"
           @input="changeAmount"
         > / {{ item.P }}
       </div>
