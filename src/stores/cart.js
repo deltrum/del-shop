@@ -51,11 +51,12 @@ export const useCartStore = defineStore('cart', () => {
   }
 
   function changeAmount (itemId, newAmount) {
+    console.log('Changed')
     if (!isCartEmpty.value) {
       const foundIndex = items.findIndex(item => item.T === itemId)
 
       if (foundIndex !== -1) {
-        items[foundIndex].amount = newAmount
+        items[foundIndex].amount = Number(newAmount)
       }
     }
   }

@@ -1,6 +1,7 @@
 <script>
 import { useCartStore } from '~/stores/cart'
 import { ref } from 'vue'
+import { debounce } from '~/utils/debounce'
 
 export default {
   props: {
@@ -15,14 +16,14 @@ export default {
 
     const localAmount = ref(props.item.amount)
 
-    function changeAmount (e) {
+    const changeAmount = debounce(function changeAmount (e) {
       const newAmount = e.target.value
 
       if (newAmount > 0 && newAmount <= props.item.P) {
         localAmount.value = newAmount
         cartStore.changeAmount(props.item.T, newAmount)
       }
-    }
+    }, 300)
 
     function removeFromCart () {
       cartStore.removeFromCart(props.item.T)
